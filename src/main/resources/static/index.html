@@ -32,11 +32,17 @@
                     </el-image>
                 </template>
             </el-table-column>
-            <el-table-column prop="desc" label="简介" width="400">
+            <el-table-column prop="desc" label="简介" width="300">
             </el-table-column>
-            <el-table-column prop="url" label="链接" width="300">
+            <el-table-column prop="url" label="链接" width="208">
             </el-table-column>
             <el-table-column prop="create_time" label="时间" width="200">
+            </el-table-column>
+            <el-table-column label="操作" width="200">
+                <template  slot-scope="scope">
+                    <el-button @click="edit" size="medium" type="primary">编辑</el-button>
+                    <el-button @click="dele" size="medium" type="danger">删除</el-button>
+                </template>
             </el-table-column>
         </el-table>
 
@@ -112,9 +118,39 @@
                     });
                     this.getData()
                 }).catch(err => {
-                    console.error(err);
+                    this.$message({
+                        message: '添加失败',
+                        type: 'error'
+                    });
                 })
-            }
+            },
+            // 编辑
+            edit(id){
+                this.dialogVisible = true
+                axios.get(`${this.apiurl}/news/the`, {id}).then(res => {
+                    this.form = res.data
+                }).catch(err => {
+                    this.$message({
+                        message: '获取失败',
+                        type: 'error'
+                    });
+                }) 
+            },
+            // 删除
+            dele(id){
+                axios.get(`${this.apiurl}/news/del`, id).then(res => {
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                    this.getData()
+                }).catch(err => {
+                    this.$message({
+                        message: '删除失败',
+                        type: 'error'
+                    });
+                })
+            },
         }
     })
 </script>
