@@ -1,18 +1,33 @@
 package com.java_ssm.controller;
-
-import org.springframework.stereotype.Controller;
+import com.java_ssm.entity.News;
+import com.java_ssm.service.NewsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import java.util.*;
 
 @RestController
+@RequestMapping("/news")
 public class NewsController {
-    @RequestMapping(method = RequestMethod.GET,value = "/user")
-    public String UserInfo(@RequestParam Map<String, Object> params) {
-        return "<h1>name:"+params.get("name")+"</h1>"+"<h1>age:"+params.get("age")+"</h1>";
+    @Autowired
+    private NewsService newsService;
+    @PostMapping("/set")
+    public Boolean set(News news){
+        return newsService.addNews(news);
     }
-    @PostMapping("/usermodal")
-    public String UserModal(@RequestParam("name") String name,@RequestParam("age") String age){
-        return "name："+name+"</br>"+"age"+age;
+    @GetMapping("/del")
+    public Boolean del(@RequestParam String id){
+        return newsService.delNews(id);
+    }
+    @PostMapping("/edit")
+    public Boolean edit(News news){
+        return newsService.editNews(news);
+    }
+    @GetMapping("/list")
+    public List<News> list(){
+        return newsService.findNews();
+    }
+    @GetMapping("/the")
+    public News the(@RequestParam String id){
+        return newsService.findOneNews(id);
     }
 }
