@@ -4,6 +4,9 @@ logging:
   level:
     root: error
 spring:
+  web:
+    resources:
+      static-locations: classpath:/templates/
   main:
     banner-mode: off # 关闭打印标志
   datasource:
