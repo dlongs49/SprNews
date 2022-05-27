@@ -13,6 +13,13 @@
 
 <body>
     <div id=app>
+        <el-row>
+            <el-button size="medium" icon="el-icon-plus" type="primary">新建</el-button>
+            <el-button size="medium" type="success">刷新</el-button>
+            <el-button type="info">信息按钮</el-button>
+            <el-button type="warning">警告按钮</el-button>
+            <el-button type="danger">危险按钮</el-button>
+          </el-row>
         <el-table :data="data" border style="width: 100%">
             <el-table-column prop="title" label="标题" width="300">
             </el-table-column>
