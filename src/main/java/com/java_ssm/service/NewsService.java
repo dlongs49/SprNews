@@ -13,6 +13,7 @@ public class NewsService {
     private NewsMapper newsMapper;
 
     public Boolean addNews(News news){
+        System.out.println(news);
         return newsMapper.addNews(news);
     }
     public Boolean delNews(String id){

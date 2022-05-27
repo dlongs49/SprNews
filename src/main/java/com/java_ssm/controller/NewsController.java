@@ -11,7 +11,8 @@ public class NewsController {
     @Autowired
     private NewsService newsService;
     @PostMapping("/set")
-    public Boolean set(News news){
+    public Boolean set(@RequestBody News news){
+        System.out.println(news);
         return newsService.addNews(news);
     }
     @GetMapping("/del")
