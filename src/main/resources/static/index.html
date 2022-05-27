@@ -13,16 +13,20 @@
 
 <body>
     <div id=app>
-        <el-table :data="data" style="width: 100%">
-            <el-table-column prop="title" label="标题" width="180">
+        <el-table :data="data" border style="width: 100%">
+            <el-table-column prop="title" label="标题" width="300">
             </el-table-column>
-            <el-table-column prop="image" label="图片" width="180">
+            <el-table-column prop="image" label="图片" width="200">
+                <template slot-scope="scope">
+                    <el-image style="width: 100px; height: 100px" :src="scope.image" :preview-src-list="scope.image">
+                    </el-image>
+                </template>
             </el-table-column>
-            <el-table-column prop="desc" label="简介">
+            <el-table-column prop="desc" label="简介" width="400">
             </el-table-column>
-            <el-table-column prop="url" label="链接">
+            <el-table-column prop="url" label="链接" width="300">
             </el-table-column>
-            <el-table-column prop="create_time" label="时间">
+            <el-table-column prop="create_time" label="时间" width="200">
             </el-table-column>
         </el-table>
     </div>
@@ -34,7 +38,7 @@
     let el = new Vue({
         el: '#app',
         data: {
-            apiurl: 'http://locahost',
+            apiurl: 'http://localhost',
             data: []
         },
         mounted() {
@@ -42,9 +46,8 @@
         },
         methods: {
             getData() {
-                console.log(100);
-                axios.get(this.apiurl + '/news/list').then(res => {
-                    console.log(res);
+                axios.get(`${this.apiurl}/news/list`).then(res => {
+                    this.data = res.data
                 }).catch(err => {
                     console.error(err);
                 })
