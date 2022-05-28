@@ -1,13 +1,13 @@
 package com.java_ssm.entity;
 
 public class News {
-    String id;
-    String title;
-    String image;
-    String desc;
-    String url;
-    String create_time;
-    String content;
+    public String id;
+    public String title;
+    public String image;
+    public String desc;
+    public String url;
+    public String create_time;
+    public String content;
 
     public String getId() {
         return id;

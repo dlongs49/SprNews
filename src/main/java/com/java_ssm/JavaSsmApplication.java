@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @MapperScan("com.java_ssm.mapper")
 public class JavaSsmApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(JavaSsmApplication.class, args);
     }
