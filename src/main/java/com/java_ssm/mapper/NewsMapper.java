@@ -10,7 +10,7 @@ import java.util.List;
 public interface NewsMapper {
     @Insert("insert into `news` (`id`,`title`,`image`,`desc`,`url`,`create_time`,`content`) values (#{id},#{title},#{image},#{desc},#{url},#{create_time},#{content})")
     public Boolean addNews(News news);
-
+    @Delete("delete from news where id = #{id}")
     public Boolean delNews(String id);
 
     public Boolean editNews(News news);

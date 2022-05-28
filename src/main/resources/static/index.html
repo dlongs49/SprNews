@@ -25,22 +25,20 @@
         <el-table :data="data" border style="width: 100%">
             <el-table-column prop="title" label="标题" width="300">
             </el-table-column>
-            <el-table-column prop="image" label="图片" width="200">
+            <el-table-column prop="image" label="图片" width="280">
                 <template slot-scope="scope">
-                    <!-- <el-image style="width: 100px; height: 100px" :src="scope.image" :preview-src-list="scope.image">
-                    </el-image> -->
+                    <el-image style="width: 100px; height: 100px" :src="scope.row.image" :preview-src-list="scope.image">
+                    </el-image>
                 </template>
             </el-table-column>
-            <el-table-column prop="desc" label="简介" width="200">
+            <el-table-column prop="url" label="链接" width="300">
             </el-table-column>
-            <el-table-column prop="url" label="链接" width="200">
+            <el-table-column prop="create_time" label="时间" width="300">
             </el-table-column>
-            <el-table-column prop="create_time" label="时间" width="200">
-            </el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
-                    <el-button @click="edit" size="medium" type="primary">编辑</el-button>
-                    <el-button @click="dele" size="medium" type="danger">删除</el-button>
+                    <el-button @click="edit(scope.row.id)" size="medium" type="primary">编辑</el-button>
+                    <el-button @click="dele(scope.row.id)" size="medium" type="danger">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -58,7 +56,7 @@
                     <el-input v-model="form.url" placeholder="请输入新闻来源链接"></el-input>
                 </el-form-item>
                 <el-form-item label="新闻简介">
-                    <el-input type="textarea" resize="none" :autosize="{ minRows: 4, maxRows: 4}" placeholder="请输入新闻简介" v-model="form.desc">
+                    <el-input type="textarea" resize="none" maxlength="200" show-word-limit :autosize="{ minRows: 4, maxRows: 4}" placeholder="请输入新闻简介" v-model="form.desc">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="新闻详情">
@@ -100,6 +98,7 @@
             },
             // 打开模态层
             openDialog() {
+                this.form = {}
                 this.dialogVisible = true
             },
             // 关闭模态层
@@ -127,7 +126,9 @@
             edit(id) {
                 this.dialogVisible = true
                 axios.get(`${this.apiurl}/news/the`, {
-                    id
+                    params: {
+                        id
+                    }
                 }).then(res => {
                     this.form = res.data
                 }).catch(err => {
@@ -139,7 +140,12 @@
             },
             // 删除
             dele(id) {
-                axios.get(`${this.apiurl}/news/del`, id).then(res => {
+                console.log(id);
+                axios.get(`${this.apiurl}/news/del`, {
+                    params: {
+                        id
+                    }
+                }).then(res => {
                     this.$message({
                         message: '删除成功',
                         type: 'success'
