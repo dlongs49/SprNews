@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface NewsMapper {
-    @Insert("insert into news (id,title,image,desc,url,create_time,content) values (#{id},#{title},#{image},#{desc},#{url},#{create_time},#{content})")
+    @Insert("insert into `news` (`id`,`title`,`image`,`desc`,`url`,`create_time`,`content`) values (#{id},#{title},#{image},#{desc},#{url},#{create_time},#{content})")
     public Boolean addNews(News news);
 
     public Boolean delNews(String id);
