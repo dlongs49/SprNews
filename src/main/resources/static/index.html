@@ -37,7 +37,7 @@
             </el-table-column>
             <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
-                    <el-button @click="edit(scope.row.id)" size="medium" type="primary">编辑</el-button>
+                    <el-button @click="the(scope.row.id)" size="medium" type="primary">编辑</el-button>
                     <el-button @click="dele(scope.row.id)" size="medium" type="danger">删除</el-button>
                 </template>
             </el-table-column>
@@ -56,7 +56,7 @@
                     <el-input v-model="form.url" placeholder="请输入新闻来源链接"></el-input>
                 </el-form-item>
                 <el-form-item label="新闻简介">
-                    <el-input type="textarea" resize="none" maxlength="200" show-word-limit :autosize="{ minRows: 4, maxRows: 4}" placeholder="请输入新闻简介" v-model="form.desc">
+                    <el-input type="textarea" resize="none" maxlength="200" show-word-limit :autosize="{ minRows: 4, maxRows: 4}" placeholder="请输入新闻简介" v-model="form.desct">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="新闻详情">
@@ -82,7 +82,8 @@
             dialogVisible: false,
             keyword: '',
             form: {},
-            data: []
+            data: [],
+            isFlg:true,
         },
         mounted() {
             this.getData();
@@ -98,6 +99,7 @@
             },
             // 打开模态层
             openDialog() {
+                this.isFlg = true
                 this.form = {}
                 this.dialogVisible = true
             },
@@ -107,6 +109,14 @@
             },
             // 提交
             submit() {
+                if(this.isFlg){
+                    this.add()
+                }else{
+                    this.edit()
+                }
+            },
+            // 新建提交
+            add(){
                 axios.post(`${this.apiurl}/news/set`, this.form).then(res => {
                     this.$message({
                         message: '添加成功',
@@ -122,8 +132,26 @@
                     });
                 })
             },
-            // 编辑
-            edit(id) {
+            // 编辑提交
+            edit(){
+                axios.post(`${this.apiurl}/news/edit`, this.form).then(res => {
+                    this.$message({
+                        message: '编辑成功',
+                        type: 'success'
+                    });
+                    this.dialogVisible = false
+                    this.getData()
+                }).catch(err => {
+                    console.error(err);
+                    this.$message({
+                        message: '编辑失败',
+                        type: 'error'
+                    });
+                })
+            },
+            // 指定
+            the(id) {
+                this.isFlg = false
                 this.dialogVisible = true
                 axios.get(`${this.apiurl}/news/the`, {
                     params: {
@@ -140,7 +168,6 @@
             },
             // 删除
             dele(id) {
-                console.log(id);
                 axios.get(`${this.apiurl}/news/del`, {
                     params: {
                         id

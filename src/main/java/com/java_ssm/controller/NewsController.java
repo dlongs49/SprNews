@@ -23,7 +23,7 @@ public class NewsController {
         newsData.create_time = dataFormmat.format(date); // 格式化时间
         newsData.title = news.getTitle();
         newsData.image = news.getImage();
-        newsData.desc = news.getDesc();
+        newsData.desct = news.getDesct();
         newsData.url = news.getUrl();
         newsData.content = news.getContent();
         return newsService.addNews(newsData);
@@ -35,8 +35,15 @@ public class NewsController {
     }
 
     @PostMapping("/edit")
-    public Boolean edit(News news) {
-        return newsService.editNews(news);
+    public Boolean edit(@RequestBody News news) {
+        News newsData = new News();
+        newsData.id = news.getId();
+        newsData.title = news.getTitle();
+        newsData.image = news.getImage();
+        newsData.desct = news.getDesct();
+        newsData.url = news.getUrl();
+        newsData.content = news.getContent();
+        return newsService.editNews(newsData);
     }
 
     @GetMapping("/list")

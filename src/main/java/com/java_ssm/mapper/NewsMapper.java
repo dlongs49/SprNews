@@ -8,15 +8,18 @@ import java.util.List;
 
 @Repository
 public interface NewsMapper {
-    @Insert("insert into `news` (`id`,`title`,`image`,`desc`,`url`,`create_time`,`content`) values (#{id},#{title},#{image},#{desc},#{url},#{create_time},#{content})")
+    @Insert("insert into `news` (`id`,`title`,`image`,`desct`,`url`,`create_time`,`content`) values (#{id},#{title},#{image},#{desct},#{url},#{create_time},#{content})")
     public Boolean addNews(News news);
+
     @Delete("delete from news where id = #{id}")
     public Boolean delNews(String id);
 
+    @Update("update news set title=#{title}, image=#{image}, desct=#{desct}, url=#{url}, content=#{content} where id = #{id}")
     public Boolean editNews(News news);
 
     @Select("select * from news")
     public List<News> findNews();
+
     @Select("select * from news where id = #{id}")
     public News findOneNews(String id);
 

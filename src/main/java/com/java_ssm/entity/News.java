@@ -4,7 +4,7 @@ public class News {
     public String id;
     public String title;
     public String image;
-    public String desc;
+    public String desct;
     public String url;
     public String create_time;
     public String content;
@@ -33,12 +33,12 @@ public class News {
         this.image = image;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDesct() {
+        return desct;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDesct(String desct) {
+        this.desct = desct;
     }
 
     public String getUrl() {
@@ -71,18 +71,18 @@ public class News {
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", image='" + image + '\'' +
-                ", desc='" + desc + '\'' +
+                ", desct='" + desct + '\'' +
                 ", url='" + url + '\'' +
                 ", create_time='" + create_time + '\'' +
                 ", content='" + content + '\'' +
                 '}';
     }
 
-//    public News(String id, String title, String image, String desc, String url, String create_time, String content) {
+//    public News(String id, String title, String image, String desct, String url, String create_time, String content) {
 //        this.id = id;
 //        this.title = title;
 //        this.image = image;
-//        this.desc = desc;
+//        this.desct = desct;
 //        this.url = url;
 //        this.create_time = create_time;
 //        this.content = content;
