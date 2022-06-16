@@ -57,7 +57,9 @@
                     <el-input v-model="form.title" placeholder="请输入新闻标题"></el-input>
                 </el-form-item>
                 <el-form-item label="新闻封面">
-                    <el-input v-model="form.image" placeholder="请输入新闻封面"></el-input>
+                    <el-upload class="upload-demo" :action="apiurl+'/upload'" :on-success="onSuccess" multiple :limit="3" :file-list="fileList">
+                        <el-button type="primary">上传新闻封面</el-button>
+                    </el-upload>
                 </el-form-item>
                 <el-form-item label="来源链接">
                     <el-input v-model="form.url" placeholder="请输入新闻来源链接"></el-input>
@@ -95,6 +97,7 @@
                 dialogVisible: false,
                 keyword: '',
                 form: {},
+                fileList: [],
                 data: [],
                 isFlg: true,
             })
@@ -121,11 +124,14 @@
                 }
                 // 提交
             const submit = () => {
-                    if (state.isFlg) {
-                        add()
-                    } else {
-                        edit()
-                    }
+                if (state.isFlg) {
+                    add()
+                } else {
+                    edit()
+                }
+            }
+            const onSuccess = (e) => {
+                    console.log(e);
                 }
                 // 新建提交
             function add() {
@@ -205,6 +211,7 @@
                 handleClose,
                 getData,
                 submit,
+                onSuccess,
                 the,
                 dele
             }
