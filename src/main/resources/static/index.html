@@ -57,8 +57,9 @@
                     <el-input v-model="form.title" placeholder="请输入新闻标题"></el-input>
                 </el-form-item>
                 <el-form-item label="新闻封面">
-                    <el-upload class="upload-demo" :action="apiurl+'/upload'" :on-success="onSuccess" multiple :limit="3" :file-list="fileList">
-                        <el-button type="primary">上传新闻封面</el-button>
+                    <el-upload class="upload-demo" :action="apiurl+'/upload'" :on-success="onSuccess" :show-file-list="false" >
+                        <img v-if="form.image" :src="apiurl+form.image" class="avatar" style="width:100px;height:100px;"/>
+                        <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="来源链接">
@@ -131,7 +132,7 @@
                 }
             }
             const onSuccess = (e) => {
-                    console.log(e);
+                state.form.image = e
                 }
                 // 新建提交
             function add() {
