@@ -6,16 +6,22 @@
     <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
     <meta name=viewport content="width=device-width,initial-scale=1">
     <title>java_ssm</title>
-    <link rel="stylesheet" href="./css/element-ui.css">
     <link rel="stylesheet" href="./css/global.css">
+    <script src="./js/vue@3.min.js"></script>
+    <!-- Vue3的包必须在Element-Plus上面否则会报错 -->
+    <script src="./js/axios.min.js"></script>
+    <link rel="stylesheet" href="./css/element-plus.css">
+    <script src="./js/element-plus.index.js"></script>
+    <script src="./js/element-plus-icon.js"></script>
 </head>
 
 <body>
     <div id=app>
         <el-row type="flex" justify="space-between" style="margin-bottom: 10px;">
-            <el-col>
-                <el-button @click="openDialog" size="medium" icon="el-icon-plus" type="primary">新建</el-button>
-                <el-button @click="getData()" size="medium" type="success">刷新</el-button>
+            <el-col :span="6">
+                <el-button @click="openDialog" size="large" type="primary">新建
+                </el-button>
+                <el-button @click="getData" size="large" type="success">刷新</el-button>
             </el-col>
             <el-col :span="6">
                 <el-input placeholder="请输入标题搜索" v-model="keyword" style="width: 300px;" clearable>
@@ -26,8 +32,9 @@
             <el-table-column prop="title" label="标题" width="300">
             </el-table-column>
             <el-table-column prop="image" label="图片" width="280">
-                <template slot-scope="scope">
-                    <el-image style="width: 100px; height: 100px" :src="scope.row.image" :preview-src-list="scope.image">
+                <template #default="scope">
+                    <el-image style="width: 100px; height: 100px" :src="scope.row.image"
+                        :preview-src-list="scope.image">
                     </el-image>
                 </template>
             </el-table-column>
@@ -36,15 +43,15 @@
             <el-table-column prop="create_time" label="时间" width="300">
             </el-table-column>
             <el-table-column label="操作" width="300">
-                <template slot-scope="scope">
-                    <el-button @click="the(scope.row.id)" size="medium" type="primary">编辑</el-button>
-                    <el-button @click="dele(scope.row.id)" size="medium" type="danger">删除</el-button>
+                <template #default="scope">
+                    <el-button @click="the(scope.row.id)" size="large" type="primary">编辑</el-button>
+                    <el-button @click="dele(scope.row.id)" size="large" type="danger">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
 
-        <el-dialog title="表单" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+        <el-dialog title="表单" v-model="dialogVisible" width="50%" :before-close="handleClose">
             <el-form label-width="80px" :model="form">
                 <el-form-item label="新闻标题">
                     <el-input v-model="form.title" placeholder="请输入新闻标题"></el-input>
@@ -71,122 +78,254 @@
         </el-dialog>
     </div>
 </body>
-<script src="./js/vue.min.js"></script>
-<script src="./js/element-ui.index.js"></script>
-<script src="./js/axios.min.js"></script>
 <script>
-    let el = new Vue({
-        el: '#app',
-        data: {
-            apiurl: 'http://localhost',
-            dialogVisible: false,
-            keyword: '',
-            form: {},
-            data: [],
-            isFlg:true,
-        },
-        mounted() {
-            this.getData();
-        },
-        methods: {
-            // 数据列表
-            getData() {
-                axios.get(`${this.apiurl}/news/list`).then(res => {
-                    this.data = res.data
+    const {
+        onMounted,
+        reactive,
+        toRefs
+    } = Vue;
+    const {
+        ElMessage
+    } = ElementPlus
+    let content = ({
+
+        setup() {
+            const state = reactive({
+                apiurl: 'http://localhost',
+                dialogVisible: false,
+                keyword: '',
+                form: {},
+                data: [],
+                isFlg: true,
+            })
+            onMounted(() => {
+                    getData()
+                })
+                // 数据列表
+            function getData() {
+                axios.get(`${state.apiurl}/news/list`).then(res => {
+                    state.data = res.data
                 }).catch(err => {
                     console.error(err);
                 })
-            },
+            }
             // 打开模态层
-            openDialog() {
-                this.isFlg = true
-                this.form = {}
-                this.dialogVisible = true
-            },
-            // 关闭模态层
-            handleClose() {
-                this.dialogVisible = false
-            },
-            // 提交
-            submit() {
-                if(this.isFlg){
-                    this.add()
-                }else{
-                    this.edit()
+            const openDialog = () => {
+                    state.dialogVisible = true
+                    state.isFlg = true
+                    state.form = {}
                 }
-            },
-            // 新建提交
-            add(){
-                axios.post(`${this.apiurl}/news/set`, this.form).then(res => {
-                    this.$message({
+                // 关闭模态层
+            const handleClose = () => {
+                    state.dialogVisible = false
+                }
+                // 提交
+            const submit = () => {
+                    if (state.isFlg) {
+                        add()
+                    } else {
+                        edit()
+                    }
+                }
+                // 新建提交
+            function add() {
+                axios.post(`${state.apiurl}/news/set`, state.form).then(res => {
+                    ElMessage({
                         message: '添加成功',
                         type: 'success'
                     });
-                    this.dialogVisible = false
-                    this.getData()
+                    state.dialogVisible = false
+                    getData()
                 }).catch(err => {
                     console.error(err);
-                    this.$message({
+                    ElMessage({
                         message: '添加失败',
                         type: 'error'
                     });
                 })
-            },
+            }
             // 编辑提交
-            edit(){
-                axios.post(`${this.apiurl}/news/edit`, this.form).then(res => {
-                    this.$message({
+            function edit() {
+                axios.post(`${state.apiurl}/news/edit`, state.form).then(res => {
+                    ElMessage({
                         message: '编辑成功',
                         type: 'success'
                     });
-                    this.dialogVisible = false
-                    this.getData()
+                    state.dialogVisible = false
+                    getData()
                 }).catch(err => {
+
                     console.error(err);
-                    this.$message({
+                    ElMessage({
                         message: '编辑失败',
                         type: 'error'
                     });
                 })
-            },
+            }
             // 指定
-            the(id) {
-                this.isFlg = false
-                this.dialogVisible = true
-                axios.get(`${this.apiurl}/news/the`, {
+            const the = (id) => {
+                    state.isFlg = false
+                    state.dialogVisible = true
+                    axios.get(`${state.apiurl}/news/the`, {
+                        params: {
+                            id
+                        }
+                    }).then(res => {
+                        state.form = res.data
+                    }).catch(err => {
+                        ElMessage({
+                            message: '获取失败',
+                            type: 'error'
+                        });
+                    })
+                }
+                // 删除
+            const dele = (id) => {
+                axios.get(`${state.apiurl}/news/del`, {
                     params: {
                         id
                     }
                 }).then(res => {
-                    this.form = res.data
-                }).catch(err => {
-                    this.$message({
-                        message: '获取失败',
-                        type: 'error'
-                    });
-                })
-            },
-            // 删除
-            dele(id) {
-                axios.get(`${this.apiurl}/news/del`, {
-                    params: {
-                        id
-                    }
-                }).then(res => {
-                    this.$message({
+                    ElMessage({
                         message: '删除成功',
                         type: 'success'
                     });
-                    this.getData()
+                    getData()
                 }).catch(err => {
-                    this.$message({
+                    ElMessage({
                         message: '删除失败',
                         type: 'error'
                     });
                 })
             }
+
+            return {
+                ...toRefs(state),
+                openDialog,
+                handleClose,
+                getData,
+                submit,
+                the,
+                dele
+            }
         }
     })
+    let app = Vue.createApp(content)
+
+    app.use(ElementPlus);
+    app.mount("#app")
+        // let el = new Vue({
+        //     el: '#app1',
+        //     data: {
+        // apiurl: 'http://localhost',
+        // dialogVisible: false,
+        // keyword: '',
+        // form: {},
+        // data: [],
+        // isFlg: true,
+        //     },
+        //     mounted() {
+        //         this.getData();
+        //     },
+        //     methods: {
+        // // 数据列表
+        // getData() {
+        //     axios.get(`${this.apiurl}/news/list`).then(res => {
+        //         this.data = res.data
+        //     }).catch(err => {
+        //         console.error(err);
+        //     })
+        // },
+        // // 打开模态层
+        // openDialog() {
+        //     this.isFlg = true
+        //     this.form = {}
+        //     this.dialogVisible = true
+        // },
+        //         // 关闭模态层
+        //         handleClose() {
+        //             this.dialogVisible = false
+        //         },
+        //         // 提交
+        //         submit() {
+        //             if (this.isFlg) {
+        //                 this.add()
+        //             } else {
+        //                 this.edit()
+        //             }
+        //         },
+        //         // 新建提交
+        //         add() {
+        //             axios.post(`${this.apiurl}/news/set`, this.form).then(res => {
+        //                 ElMessage({
+        //                     message: '添加成功',
+        //                     type: 'success'
+        //                 });
+        //                 this.dialogVisible = false
+        //                 this.getData()
+        //             }).catch(err => {
+        //                 console.error(err);
+        //                 ElMessage({
+        //                     message: '添加失败',
+        //                     type: 'error'
+        //                 });
+        //             })
+        //         },
+        //         // 编辑提交
+        //         edit() {
+        //             axios.post(`${this.apiurl}/news/edit`, this.form).then(res => {
+        //                 ElMessage({
+        //                     message: '编辑成功',
+        //                     type: 'success'
+        //                 });
+        //                 this.dialogVisible = false
+        //                 this.getData()
+        //             }).catch(err => {
+        //                 console.error(err);
+        //                 ElMessage({
+        //                     message: '编辑失败',
+        //                     type: 'error'
+        //                 });
+        //             })
+        //         },
+        //         // 指定
+        //         the(id) {
+        //             this.isFlg = false
+        //             this.dialogVisible = true
+        //             axios.get(`${this.apiurl}/news/the`, {
+        //                 params: {
+        //                     id
+        //                 }
+        //             }).then(res => {
+        //                 this.form = res.data
+        //             }).catch(err => {
+        //                 ElMessage({
+        //                     message: '获取失败',
+        //                     type: 'error'
+        //                 });
+        //             })
+        //         },
+        //         // 删除
+        //         dele(id) {
+        //             axios.get(`${this.apiurl}/news/del`, {
+        //                 params: {
+        //                     id
+        //                 }
+        //             }).then(res => {
+        //                 ElMessage({
+        //                     message: '删除成功',
+        //                     type: 'success'
+        //                 });
+        //                 this.getData()
+        //             }).catch(err => {
+        //                 ElMessage({
+        //                     message: '删除失败',
+        //                     type: 'error'
+        //                 });
+        //             })
+        //         }
+        //     }
+        // })
 </script>
 
 </html>
