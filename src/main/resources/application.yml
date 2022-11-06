@@ -8,7 +8,7 @@ spring:
     resources:
       static-locations: classpath:/templates/
   main:
-      banner-mode: off # 关闭打印标志
+      banner-mode: log # 关闭打印标志
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

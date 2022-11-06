@@ -15,6 +15,9 @@ public class UploadController {
         Upload upload = new Upload();
         String fileName = "";
         fileName = upload.setFile(file, request, "uploadImg");
+        System.out.println("文件地址："+fileName);
+        System.out.println( System.getProperty("user.dir") );
+
         return fileName;
     }
 }

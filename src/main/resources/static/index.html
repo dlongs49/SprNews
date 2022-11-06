@@ -11,8 +11,6 @@
     <!-- Vue3的包必须在Element-Plus上面否则会报错 -->
     <script src="./js/axios.min.js"></script>
     <link rel="stylesheet" href="./css/element-plus.css">
-    <script src="./js/element-plus.index.js"></script>
-    <script src="./js/element-plus-icon.js"></script>
 </head>
 
 <body>
@@ -42,7 +40,7 @@
             </el-table-column>
             <el-table-column prop="create_time" label="时间" width="300">
             </el-table-column>
-            <el-table-column label="操作" width="300">
+            <el-table-column label="操作">
                 <template #default="scope">
                     <el-button @click="the(scope.row.id)" size="large" type="primary">编辑</el-button>
                     <el-button @click="dele(scope.row.id)" size="large" type="danger">删除</el-button>
@@ -59,7 +57,9 @@
                 <el-form-item label="新闻封面">
                     <el-upload class="upload-demo" :action="apiurl+'/upload'" :on-success="onSuccess" :show-file-list="false" >
                         <img v-if="form.image" :src="apiurl+form.image" class="avatar" style="width:100px;height:100px;"/>
-                        <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+                        <el-icon v-else class="avatar-uploader-icon">
+                            <component :is="Plus"></component>
+                        </el-icon>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="来源链接">
@@ -81,6 +81,9 @@
         </el-dialog>
     </div>
 </body>
+
+<script src="./js/element-plus.index.js"></script>
+<script src="./js/element-plus-icon.js"></script>
 <script>
     const {
         onMounted,
@@ -90,6 +93,7 @@
     const {
         ElMessage
     } = ElementPlus
+    const {Plus}  = ElementPlusIconsVue
     let content = ({
 
         setup() {
@@ -214,7 +218,8 @@
                 submit,
                 onSuccess,
                 the,
-                dele
+                dele,
+                Plus,
             }
         }
     })
